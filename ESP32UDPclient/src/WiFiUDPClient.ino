@@ -21,6 +21,8 @@ boolean failsafe = false;
 char packetBuffer[55];
 int mX = 23;
 int dX = 27;
+int gnd = 12;
+int vdd = 13;
 // The udp library class
 WiFiUDP udp;
 
@@ -32,8 +34,9 @@ void setup() {
         connectToWiFi(networkName, networkPswd);
         pinMode(mX, OUTPUT);
         pinMode(dX, OUTPUT);
+        pinMode(vdd, OUTPUT);
+        pinMode(gnd, OUTPUT);
 }
-
 void loop() {
         // only send data when connected
         if (connected) {
@@ -47,11 +50,7 @@ void loop() {
                                 packetBuffer[len] = 0;
                         }
                         delay(2);
-                        // Serial.print("Contents:");
-                        // Serial.println(packetBuffer);
-
                         ConvertData(packetBuffer);
-
                         // Serial.println(xyz);
                 }
                 delay(2);
@@ -59,11 +58,6 @@ void loop() {
                 udp.beginPacket(udpAddress, udpPort);
                 udp.printf(" ");
         }
-        digitalWrite(dX, LOW);
-        digitalWrite(mX, LOW);
-        delayMicroseconds(800);
-        digitalWrite(mX, HIGH);
-        delayMicroseconds(800);
 }
 
 void connectToWiFi(const char *ssid, const char *pwd) {
@@ -137,23 +131,17 @@ char ConvertData(char datain[3]) {
 void MotorControl(char incoming[], int m, int dirpin) {
 
         int speed = atoi(incoming);
-        int time =0;
+        int pmw_speed =0;
 
         if (speed < 0) {
                 digitalWrite(dirpin,LOW);
         } else {
                 digitalWrite(dirpin,HIGH);
         }
-        if (abs(speed) <= 5) {
-                time=1000;
+        if (speed>0) {
+                pmw_speed=map(speed, 1, 50, 200,1000);
         }
-
-        delay(2);
-        Serial.println(abs(speed));
-        Serial.println(time);
-
-        digitalWrite(m, LOW);
-        delayMicroseconds(time);
-        digitalWrite(m, HIGH);
-        delayMicroseconds(time);
+        if (speed<0) {
+                pmw_speed=map(speed, -50, -1, 200,1000);
+        }
 }
