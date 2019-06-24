@@ -120,33 +120,33 @@ void ConvertData(char datain[3]) {
 }
 
 void loop() {
-  while (WiFi.status() == WL_CONNECTED) {
+        while (WiFi.status() == WL_CONNECTED) {
 
-        int packetSize = udp.parsePacket();
-        if (packetSize) {
-                //Serial.print("Received packet of size ");
-                //Serial.println(packetSize);
-                //If serial data is recived send it to UDP
-                int len = udp.read(packetBuffer, 255);
-                if (len > 0) {
-                        packetBuffer[len] = 0;
+                int packetSize = udp.parsePacket();
+                if (packetSize) {
+                        //Serial.print("Received packet of size ");
+                        //Serial.println(packetSize);
+                        //If serial data is recived send it to UDP
+                        int len = udp.read(packetBuffer, 255);
+                        if (len > 0) {
+                                packetBuffer[len] = 0;
+                        }
+
+                        delay(2);
+                        ConvertData(packetBuffer);
+                        // Serial.println(xyz);
                 }
 
                 delay(2);
-                ConvertData(packetBuffer);
-                // Serial.println(xyz);
+                // Send a packet
+                udp.beginPacket(ServerIP, 2000);
+                udp.printf(" ");
         }
+        while (WiFi.status() != WL_CONNECTED) {
 
-        delay(2);
-        // Send a packet
-        udp.beginPacket(ServerIP, 2000);
-        udp.printf(" ");
-}
-  while (WiFi.status() != WL_CONNECTED) {
-
-int pmw_speed=0;
-digitalWrite(vdd,LOW);
-digitalWrite(vcc,LOW);
-analogWrite(mX,pmw_speed);
-}
+                int pmw_speed=0;
+                digitalWrite(vdd,LOW);
+                digitalWrite(vcc,LOW);
+                analogWrite(mX,pmw_speed);
+        }
 }
