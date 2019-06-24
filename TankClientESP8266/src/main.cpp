@@ -19,9 +19,9 @@ unsigned int localPort = 2000; // local port to listen for UDP packets
 boolean connected = false;
 boolean failsafe = false;
 char packetBuffer[255];
-int mX = 14;
-int vcc = 12;
-int vdd = 13;
+int mX = 14; // pin 5
+int vcc = 12; //pin 6
+int vdd = 13; //pin 7
 // The udp library class
 WiFiUDP udp;
 
@@ -66,14 +66,14 @@ void MotorControl(char incoming[], int m) {
 
         if (speed>0) {
 
-                pmw_speed=map(speed, 5, 50, 300,1000);
+                pmw_speed=map(speed, 5, 30, 200,1023);
                 digitalWrite(vdd,LOW);
                 digitalWrite(vcc,HIGH);
                 analogWrite(mX,pmw_speed);
         }
         else if (speed<0) {
 
-                pmw_speed=map(speed, -5, -50, 300,1000);
+                pmw_speed=map(speed, -5, -30, 200,1023);
                 digitalWrite(vdd,HIGH);
                 digitalWrite(vcc,LOW);
                 analogWrite(mX,pmw_speed);
@@ -120,6 +120,7 @@ void ConvertData(char datain[3]) {
 }
 
 void loop() {
+  while (WiFi.status() == WL_CONNECTED) {
 
         int packetSize = udp.parsePacket();
         if (packetSize) {
@@ -140,5 +141,12 @@ void loop() {
         // Send a packet
         udp.beginPacket(ServerIP, 2000);
         udp.printf(" ");
+}
+  while (WiFi.status() != WL_CONNECTED) {
 
+int pmw_speed=0;
+digitalWrite(vdd,LOW);
+digitalWrite(vcc,LOW);
+analogWrite(mX,pmw_speed);
+}
 }
