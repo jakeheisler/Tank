@@ -1,3 +1,0 @@
-This program is designed to be the "brain" of the system.
-It takes a char array and converts data into signed integers.
-Once it converts the data, it outputs a direction that the drone moves. 
