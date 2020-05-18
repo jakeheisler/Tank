@@ -141,12 +141,17 @@ void loop() {
                 // Send a packet
                 udp.beginPacket(ServerIP, 2000);
                 udp.printf(" ");
+                // if (WiFi.status() != WL_CONNECTED) {
+                //   break;
+                //   Serial.print("break ");
+                // }
         }
-        while (WiFi.status() != WL_CONNECTED) {
 
-                int pmw_speed=0;
-                digitalWrite(vdd,LOW);
-                digitalWrite(vcc,LOW);
-                analogWrite(mX,pmw_speed);
-        }
+        // if (WiFi.status() != WL_CONNECTED) {
+        //
+        //         int pmw_speed=0;
+        //         digitalWrite(vdd,LOW);
+        //         digitalWrite(vcc,LOW);
+        //         analogWrite(mX,pmw_speed);
+        // }
 }
